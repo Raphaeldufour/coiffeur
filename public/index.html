@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coiffeurs & Co</title>
+    <link href="css/style.css" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <script src="js/index.js" defer></script>
+</head>
+<body>
+<div class="pageContainer">
+    <nav>
+        <p class="navTitle">Coiff'EUR</p>
+        <div class="buttonsContainer">
+            <img id="addIcon" class="navIcon" src="img/addperson.svg" alt="add">
+            <img id="logoutIcon" class="navIcon" src="img/logout.svg" alt="edit">
+            <img id="loginIcon" class="navIcon" src="img/login.svg" alt="edit">
+        </div>
+    </nav>
+    <main>
+        <div id="leftContentContainer">
+            <div id="searchContainer">
+                <input type="text" id="searchInput" placeholder="Rechercher..."  autocomplete="off">
+                <p class="numberOfHairdressers"><span id="numberOfHairdressers"></span> coiffeurs trouvés</p>
+            </div>
+            <div id="hairdressersContainer">
+            </div>
+            <div id="loadMoreButton">Charger plus...</div>
+        </div>
+        <div class='viewDatasheetContainer'>
+            <div class="closeButtonContainer">
+                <button class="closeButton">X</button>
+            </div>
+            <table id='dataSheetTable'>
+                <tr>
+                    <td class="labelCell">Nom</td>
+                    <td id="nameValue"></td>
+                </tr>
+                <tr>
+                    <td class="labelCell">Numéro</td>
+                    <td id="numberValue"></td>
+                </tr>
+                <tr>
+                    <td class="labelCell">Voie</td>
+                    <td id="streetValue"></td>
+                </tr>
+                <tr>
+                    <td class="labelCell">Code postal</td>
+                    <td id="postalCodeValue"></td>
+                </tr>
+                <tr>
+                    <td class="labelCell">Ville</td>
+                    <td id="cityValue"></td>
+                </tr>
+            </table>
+            <div class="mapContainer">
+            </div>
+        </div>
+        <div class="editHairdresserContainer">
+            <button class="closeButton">X</button>
+            <div id="editHairdresser">
+                <label for="nameInput">Nom</label>
+                <input type="text" id="nameInput" name="nom" value="">
+                <label for="numberInput">Numéro</label>
+                <input type="text" id="numberInput" name="rue" value="">
+                <label for="streetInput">Voie</label>
+                <input type="text" id="streetInput" name="voie" value="">
+                <label for="postalCodeInput">Code postal</label>
+                <input type="text" id="postalCodeInput" name="code-postal" value="">
+                <label for="cityInput">Ville</label>
+                <input type="text" id="cityInput" name="ville" value="">
+                <label for="latitudeInput">latitude</label>
+                <input type="text" id="latitudeInput" name="latitude" value="">
+                <label for="longitudeInput">longitude</label>
+                <input type="text" id="longitudeInput" name="longitude" value="">
+                <button id="hairdresserSubmitButton">Enregistrer</button>
+                <div id="isModified">Coiffeur modifié !</div>
+            </div>
+            <div class="mapContainer">
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<template id="hairdresserTemplate">
+    <div class="hairdresserCard">
+        <div class="hairdresserDetails">
+            <p class="hairdresserName"></p>
+            <p class="hairdresserStreet"></p>
+            <p class="hairdresserCity"></p>
+        </div>
+        <p class="hairdresserIndex"></p>
+    </div>
+</template>
+</body>
+</html>
