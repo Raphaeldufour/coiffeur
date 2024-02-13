@@ -15,6 +15,7 @@ db.serialize(async () => {
     db.run('DROP TABLE IF EXISTS hairdressers');
 
     db.run('DROP TABLE IF EXISTS Coiffeurs');
+    db.run('DROP TABLE IF EXISTS Favoris');
 
     db.run(` 
  CREATE TABLE IF NOT EXISTS Coiffeurs (
@@ -36,7 +37,14 @@ CREATE TABLE IF NOT EXISTS Utilisateurs (
 
     db.run('CREATE TABLE IF NOT EXISTS Tokens(token VARCHAR(255) NOT NULL, user_id int, expirationDate DATE , PRIMARY KEY (token), FOREIGN KEY (user_id) REFERENCES Utilisateurs(id))');
 
-
+    db.run(`
+    CREATE TABLE IF NOT EXISTS Favoris (
+    user_id INTEGER,
+    hairdresser_id INTEGER,
+    PRIMARY KEY (user_id, hairdresser_id),
+    FOREIGN KEY (user_id) REFERENCES Utilisateurs(id),
+    FOREIGN KEY (hairdresser_id) REFERENCES Coiffeurs(id)
+);`);
     // Insérer les données du fichier JSON dans la table
     const insertStmt = db.prepare(`INSERT INTO Coiffeurs (
     nom, lat, lng, num, voie, ville, codepostal

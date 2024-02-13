@@ -5,12 +5,12 @@ const cancelButton = document.getElementById("cancel-button");
 cancelButton.addEventListener("click", (click) => {
     localStorage.setItem('isLoggedIn', 'false');
     click.preventDefault();
-    window.location.href = "http://localhost:3000";
+    window.location.href = "../index.html";
 });
 
 loginButton.addEventListener("click", handleLoginFormSubmission);
 async function checkLoginAndPassword(data) {
-        const response = await fetch('http://localhost:3000/user', {
+        const response = await fetch('/user', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ async function handleLoginFormSubmission(click) {
         const responseData = await response.json();
         localStorage.setItem('token', responseData.token);
         localStorage.setItem('isLoggedIn', 'true');
-        window.location.href = "http://localhost:3000";
+        window.location.href = "../index.html";
     } else {
         const error = await response.json();
         alert(error.message);

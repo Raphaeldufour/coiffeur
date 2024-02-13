@@ -26,6 +26,7 @@ nav {
     font-weight: bold;
 }
 
+
 .navIcon {
     width: 24px;
     height: 24px;
@@ -75,6 +76,39 @@ main {
     background-color: #f3f3f3;
 }
 
+#optionsButton {
+    width: 47px;
+    padding: 5px;
+    border: none;
+    border-radius: 30px;
+    background-color: #a73987;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#optionsContainer{
+    background-color: #f3f3f3;
+    padding: 20px;
+}
+
+#optionsContainer form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#optionsContainer form label{
+    color: #918f93;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+#optionsContainer form select{
+    padding: 10px 5px 10px 10px;
+    border: 0;
+}
+
 #hairdressersContainer {
     width: fit-content;
     min-width: 100%;
@@ -106,6 +140,24 @@ main {
 
 .hairdresserCard:hover .hairdresserDetails {
     color: white;
+}
+.hairdresserFavoriteContainer{
+    margin-right: 15px;
+}
+.hairdresserFavorite{
+    width: 20px;
+    height: 20px;
+    opacity: 0.2;
+}
+
+.favorite{
+    opacity: 1;
+}
+
+.leftHairdresserCard {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
 .hairdresserDetails > * {

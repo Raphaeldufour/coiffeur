@@ -7,6 +7,7 @@ const dataSheetEditContainer = document.querySelector('.editHairdresserContainer
 const logoutButton = document.getElementById('logoutIcon');
 const loginButton = document.getElementById('loginIcon');
 const addButton = document.getElementById('addIcon');
+const amountOfFavorites = document.getElementById('amountOfFavorites');
 
 const leftContentContainer = document.querySelector('#leftContentContainer');
 const currentDataSheetContainer = (localStorage.getItem('isLoggedIn') !== 'true') ? dataSheetViewContainer : dataSheetEditContainer;
@@ -25,6 +26,7 @@ const loadMoreButton = document.getElementById('loadMoreButton');
 
 let indexPage = 0;
 let hairdressers = [];
+let favorites = [];
 let filter = searchInput.value;
 
 let currentInfos = [];
@@ -235,7 +237,10 @@ function updateHairdresserInfos(hairdresser, newInfos) {
 
 
 async function getHairdressers() {
-    const response = await fetch(`/api/hairdressers?index=${indexPage}&filter=${filter}`);
+    const searchIn = document.getElementById('searchInSelect').value;
+    const orderBy = document.getElementById('orderBySelect').value;
+    console.log(`index=${indexPage}&filter=${filter}&searchIn=${searchIn}&orderBy=${orderBy}`)
+    const response = await fetch(`/api/hairdressers?index=${indexPage}&filter=${filter}&searchIn=${searchIn}&orderBy=${orderBy}`);
     const respJSON = await response.json();
     return respJSON;
 }
@@ -247,6 +252,17 @@ function getSwitchingState() {
     }
     return inSwitching;
 }
+
+async function getFavorites() {
+    const response = await fetch('/api/favorites', {
+        headers: {
+            'Authorization': localStorage.getItem('token'),
+        }
+    });
+    const respJSON = await response.json();
+    return respJSON;
+}
+
 
 function renderHairdresser(hairdresser, index) {
     const clone = hairdresserTemplate.content.cloneNode(true);
@@ -274,7 +290,48 @@ function renderHairdresser(hairdresser, index) {
     clone.querySelector('.hairdresserStreet').textContent = numero + ' ' + hairdresser.voie;
     clone.querySelector('.hairdresserCity').textContent = hairdresser.codepostal + ' ' + hairdresser.ville;
     clone.querySelector('.hairdresserIndex').textContent = index;
+
+    const favButton = clone.querySelector('.hairdresserFavorite');
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        favButton.classList.remove('hidden')
+
+        console.log(favorites);
+        if (favorites.includes(hairdresser.id)) {
+            console.log('is favorite');
+            hairdresser.isFavorite = true;
+            favButton.classList.add('favorite');
+        }
+        favButton.addEventListener('click', (event) => {
+            hairdresser.isFavorite = !hairdresser.isFavorite;
+            if (hairdresser.isFavorite) {
+                favorites.push(hairdresser.id);
+            } else {
+                favorites = favorites.filter(id => id !== hairdresser.id);
+            }
+            favButton.classList.toggle('favorite')
+            event.stopPropagation();
+            updateAmountOfFavorites();
+            sendFavorite(hairdresser.id, hairdresser.isFavorite);
+        })
+    }
     hairdressersContainer.appendChild(clone);
+}
+
+
+async function sendFavorite(id, isFavorite) {
+    let method = isFavorite ? 'POST' : 'DELETE';
+    const response = await fetch(`/api/favorites/${id}`, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': localStorage.getItem('token'),
+        }
+    })
+    if (!response.ok) {
+        response.json().then(data => {
+            alert(data.message);
+        });
+    }
 }
 
 function renderHairdressers(hairdressers, startIndex, endIndex) {
@@ -343,14 +400,42 @@ function checkLogin() {
     }
 }
 
+function clickOptionsButton() {
+    const optionsButton = document.getElementById('optionsButton');
+    const optionsContainer = document.getElementById('optionsContainer');
+    optionsButton.addEventListener('click', () => {
+        optionsContainer.classList.toggle('hidden');
+    });
+    document.getElementById('searchInSelect').addEventListener('change', onChangeSelect);
+    document.getElementById('orderBySelect').addEventListener('change', onChangeSelect);
+}
+
+function onChangeSelect() {
+    hairdressers = [];
+    hairdressersContainer.innerHTML = '';
+    prepareTenFirstHairdressers();
+}
+
+function updateAmountOfFavorites() {
+    const isHidden = favorites.length === 0;
+    amountOfFavorites.classList.toggle('hidden', isHidden);
+    document.getElementById('amountOfFavoritesContainer').classList.toggle('hidden', isHidden);
+    amountOfFavorites.textContent = favorites.length;
+}
+
 async function init() {
     checkLogin();
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+        favorites = await getFavorites();
+        updateAmountOfFavorites();
+    }
     await prepareTenFirstHairdressers();
     loadMoreButton.addEventListener('click', () => loadMoreHairdressers(hairdressers));
     checkObserver();
     searchInput.addEventListener('input', () => {
         setTimeout(hairdressersFilter, 10)
     });
+    clickOptionsButton();
 }
 
 async function prepareTenFirstHairdressers() {
