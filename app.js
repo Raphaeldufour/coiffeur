@@ -11,6 +11,7 @@ app.use((req, res, next) => {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     next();
 });
+app.disable('x-powered-by');
 
 const db = new sqlite3.Database('database/database.db');
 
