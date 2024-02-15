@@ -3,14 +3,12 @@ import sqlite3 from 'sqlite3';
 import bodyParser from 'body-parser';
 import bcrypt from "bcrypt";
 import randomstring from "randomstring";
+import helmet from "helmet";
 
 const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    next();
-});
+app.use(helmet());
 app.disable('x-powered-by');
 
 const db = new sqlite3.Database('database/database.db');
