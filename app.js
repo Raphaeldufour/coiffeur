@@ -8,7 +8,12 @@ import helmet from "helmet";
 const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.json());
-app.use(helmet());
+app.use(
+    helmet({
+        xFrameOptions: { action: "sameorigin" },
+    }),
+);
+
 app.disable('x-powered-by');
 
 const db = new sqlite3.Database('database/database.db');
