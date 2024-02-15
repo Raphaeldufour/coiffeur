@@ -7,6 +7,10 @@ import randomstring from "randomstring";
 const app = express();
 app.use(express.static('public'));
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    next();
+});
 
 const db = new sqlite3.Database('database/database.db');
 
